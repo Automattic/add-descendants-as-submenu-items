@@ -186,7 +186,7 @@ class Add_Descendants_As_Submenu_Items {
 			$children = get_pages( array(
 				'child_of'    => $item->object_id,
 				'post_type'   => $item->object,
-				'sort_column' => 'menu_order',
+				'sort_column' => 'menu_order, post_title',
 			) );
 
 			if ( ! $children )
