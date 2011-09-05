@@ -23,6 +23,10 @@ Visit Plugins -> Add New in your administration area and search for the name of 
 
 == ChangeLog ==
 
+= Version 1.0.1 =
+
+* Fix sorting by secondarily sorting by title.
+
 = Version 1.0.0 =
 
 * Initial release!
