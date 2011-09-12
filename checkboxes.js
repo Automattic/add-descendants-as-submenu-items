@@ -8,8 +8,8 @@ jQuery(document).ready(function($) {
 	}).prependTo('#update-nav-menu');
 
 	function adasi_add_checkbox( item ) {
-		// Skip items that are known not to be hierarchical post types or that we already modified
-		if ( $(item).is('.adasi-checked, .menu-item-custom, .menu-item-category, .menu-item-post_tag') ) {
+		// Skip items that are already modified or are known to not be hierarchical
+		if ( $(item).is('.adasi-checked, .menu-item-custom, .menu-item-post_tag') ) {
 			return;
 		}
 

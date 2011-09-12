@@ -1,0 +1,26 @@
+# Copyright (C) 2010 Add Descendants As Submenu Items
+# This file is distributed under the same license as the Add Descendants As Submenu Items package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Add Descendants As Submenu Items 1.0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/add-descendants-as-submenu-items\n"
+"POT-Creation-Date: 2011-09-11 23:50:27+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: add-descendants-as-submenu-items.php:109
+msgid "Automatically add all descendants as submenu items"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Add Descendants As Submenu Items"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type."
+msgstr ""
