@@ -9,8 +9,8 @@ Version:      1.1.0
 Author:       Alex Mills (Viper007Bond)
 Author URI:   http://www.viper007bond.com/
 
-TextDomain:   add-descendants-as-submenu-items
-DomainPath:   /localization/
+Text Domain:  add-descendants-as-submenu-items
+Domain Path:  /localization/
 
 **************************************************************************
 
