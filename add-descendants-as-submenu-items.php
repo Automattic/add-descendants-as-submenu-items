@@ -29,6 +29,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+**************************************************************************
+
+A note about this plugin:
+
+This plugin uses Javascript and some AJAX to add the checkboxes to the
+nav menu UI only because no hooks exist to add it using PHP. If
+Walker_Nav_Menu_Edit::start_el() had a do_action() or two, then I would
+have used that instead. I even have created a ticket to get some added:
+
+http://core.trac.wordpress.org/ticket/18584
+
+In short, just because this plugin is modifying WordPress UIs via
+Javascript doesn't mean that's the preferred way to do it. ;)
+
 **************************************************************************/
 
 class Add_Descendants_As_Submenu_Items {
