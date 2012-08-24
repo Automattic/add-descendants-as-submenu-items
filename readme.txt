@@ -1,8 +1,8 @@
 === Add Descendants As Submenu Items ===
 Contributors: Viper007Bond
 Tags: menu, nav menu, children, descendants
-Tested up to: 3.3
-Stable tag: trunk
+Tested up to: 3.5
+Stable tag: 1.2.0
 
 Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
 
@@ -23,6 +23,10 @@ Visit Plugins &rarr; Add New in your administration area and search for the name
 
 == ChangeLog ==
 
+= Version 1.2.0 =
+* `_get_post_ancestors()` will/was deprecated in WordPress 3.5 and no longer works. Parts of this plugin have been rewritten to more properly get post ancestors.
+* Bug fix: Don't highlight parents of different types. Post types and terms can have the same IDs.
+
 = Version 1.1.0 =
 * Support for hierarchical taxonomies (i.e. categories). Props WPAddiction for the idea.
 * Translatable plugin headers.
@@ -36,4 +40,4 @@ Visit Plugins &rarr; Add New in your administration area and search for the name
 == Upgrade Notice ==
 
 = 1.1.0 =
-Support for hierarchical taxonomies (i.e. categories). Props WPAddiction for the idea.
+Various bug fixes.

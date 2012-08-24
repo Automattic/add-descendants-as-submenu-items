@@ -5,7 +5,7 @@
 Plugin Name:  Add Descendants As Submenu Items
 Plugin URI:   http://www.viper007bond.com/wordpress-plugins/add-descendants-as-submenu-items/
 Description:  Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
-Version:      1.1.0
+Version:      1.2.0
 Author:       Alex Mills (Viper007Bond)
 Author URI:   http://www.viper007bond.com/
 
@@ -14,7 +14,7 @@ Domain Path:  /localization/
 
 **************************************************************************
 
-Copyright (C) 2011 Alex Mills (Viper007Bond)
+Copyright (C) 2011-2012 Alex Mills (Viper007Bond)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -314,23 +314,30 @@ class Add_Descendants_As_Submenu_Items {
 		$queried_object_id = (int) get_queried_object_id();
 
 		// Only need to fix items added by this plugin
-		if ( empty( $this->added[$queried_object_id] ) )
+		if ( empty( $queried_object_id ) || empty( $this->added[$queried_object_id] ) )
 			return $items;
 
 		// Get ancestors of currently displayed item
-		if ( is_category() || is_tag() || is_tax() ) {
+		if ( isset( $queried_object->term_id ) ) {
 			$ancestors = get_ancestors( $queried_object->term_id, $queried_object->taxonomy );
 			$parent_field = 'parent';
-		} else {
-			_get_post_ancestors( $queried_object );
-			$ancestors = $queried_object->ancestors;
+			$type = 'taxonomy';
+		} elseif ( is_singular() ) {
+			$ancestors = get_post_ancestors( $queried_object_id );
 			$parent_field = 'post_parent';
+			$type = 'post_type';
+		} else {
+			return $items;
 		}
 
 		$ancestors[] = $queried_object_id; // Needed to potentially add "current_page_item"
 
 		foreach ( $items as $item ) {
 			if ( ! in_array( $item->object_id, $ancestors ) )
+				continue;
+
+			// Only highlight things of the same type because IDs can collide
+			if ( $item->type !== $type )
 				continue;
 
 			// See http://core.trac.wordpress.org/ticket/18643
