@@ -1,8 +1,8 @@
 === Add Descendants As Submenu Items ===
 Contributors: Viper007Bond
 Tags: menu, nav menu, children, descendants
-Tested up to: 3.5
-Stable tag: 1.2.0
+Tested up to: 3.5.1
+Stable tag: 1.3.0
 
 Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
 
@@ -22,6 +22,11 @@ Visit Plugins &rarr; Add New in your administration area and search for the name
 2. The child pages have automatically been added as submenu items
 
 == ChangeLog ==
+
+= Version 1.3.0 =
+* Option to add only direct descendants (i.e. children).
+* Option to skip the parent item, adding only the descendants.
+* Added a small indicator "+descendants" or "+children" to visually identify menu elements that have additional items automatically added by this plugin.
 
 = Version 1.2.0 =
 * `_get_post_ancestors()` will/was deprecated in WordPress 3.5 and no longer works. Parts of this plugin have been rewritten to more properly get post ancestors.
