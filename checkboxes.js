@@ -30,13 +30,38 @@ jQuery(document).ready(function($) {
 					// Track IDs to check the POST for
 					IDtracker.val( IDtracker.val() + ',' + itemID );
 
-					// Add the checkbox
+                    // Get ids for checkboxes
 					var checkboxid = ADASIParams.checkboxprefix + itemID;
-					$(item).find('.menu-item-actions .link-to-original').after('<p><label><input type="checkbox" id="' + checkboxid + '" name="' + checkboxid + '" value="1" /> ' + ADASIParams.checkboxdesc + '</label></p>');
+					var checkboxskipid = ADASIParams.checkboxskipprefix + itemID;
+					var checkboxshallowid = ADASIParams.checkboxshallowprefix + itemID;
 
-					if ( response.checked ) {
+					// Add the checkboxes
+					$(item).find('.menu-item-actions .link-to-original + *').eq(0)
+                        .before('<p><label><input type="checkbox" id="' + checkboxid + '" name="' + checkboxid + '" value="1" /> ' + ADASIParams.checkboxdesc + '</label></p>')
+                        .before('<p><label style="margin-left: 30px;"><input type="checkbox" id="' + checkboxskipid + '" name="' + checkboxskipid + '" value="1" /> ' + ADASIParams.checkboxskipdesc + '</label></p>')
+                        .before('<p><label style="margin-left: 30px;"><input type="checkbox" id="' + checkboxshallowid + '" name="' + checkboxshallowid + '" value="1" /> ' + ADASIParams.checkboxshallowdesc + '</label></p>');
+
+                    var $label = $('#' + checkboxid).parents('li.menu-item').eq(0).find('.item-title');
+                    var $notification = $('<emph style="font-size: 80%; font-style: italic; margin-left: 15px;"></emph>').appendTo($label);
+                    if ( response.checked ) {
 						$('#' + checkboxid).prop('checked', true);
 					}
+					if ( response.shallow ) {
+						$('#' + checkboxshallowid).prop('checked', true);
+					}
+					if ( response.skip ) {
+						$('#' + checkboxskipid).prop('checked', true);
+					}
+					if ( response.checked ) {
+                        $notification.html('+&nbsp;descendants');
+						if ( response.shallow ) {
+	                        $notification.html('+&nbsp;children');
+	                    }
+						if ( response.skip ) {
+							$notification.text($notification.text() + ', item hidden');
+						}
+                    }
+
 				}
 			},
 			'json'

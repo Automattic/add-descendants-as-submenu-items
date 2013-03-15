@@ -56,12 +56,28 @@ class Add_Descendants_As_Submenu_Items {
 	public $form_idtracker       = 'adasi-idtracker';
 
 	/**
-	 * ID/name prefix for the checkbox inputs.
+	 * ID/name prefix for the main checkbox input.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
 	public $form_checkbox_prefix = 'adasi-child-checkbox-';
+
+	/**
+	 * ID/name prefix for the skip-this-item checkbox input.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $form_checkbox_skip_prefix = 'adasi-skip-checkbox-';
+
+	/**
+	 * ID/name prefix for the children-only checkbox input.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $form_checkbox_shallow_prefix = 'adasi-shallow-checkbox-';
 
 	/**
 	 * admin-ajax.php action name for some server-side checks.
@@ -78,6 +94,22 @@ class Add_Descendants_As_Submenu_Items {
 	 * @var string
 	 */
 	public $meta_key             = '_adasi_enabled';
+
+	/**
+	 * Meta key name for storing skip-this-item status.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $meta_key_skip         = '_adasi_skip';
+	
+	/**
+	 * Meta key name for storing children-only status.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $meta_key_shallow      = '_adasi_shallow';
 
 	/**
 	 * Stores submenu items that have been added by this plugin.
@@ -120,10 +152,14 @@ class Add_Descendants_As_Submenu_Items {
 
 		// Pass dynamic values to the Javascript file
 		$params = array(
-			'idtracker'      => $this->form_idtracker,
-			'ajaxaction'     => $this->ajax_action,
-			'checkboxprefix' => $this->form_checkbox_prefix,
-			'checkboxdesc'   => __( 'Automatically add all descendants as submenu items', 'add-descendants-as-submenu-items' ),
+			'idtracker'				=> $this->form_idtracker,
+			'ajaxaction'			=> $this->ajax_action,
+			'checkboxprefix'		=> $this->form_checkbox_prefix,
+			'checkboxdesc'			=> __( 'Automatically add all descendants as submenu items', 'add-descendants-as-submenu-items' ),
+			'checkboxskipprefix'	=> $this->form_checkbox_skip_prefix,
+			'checkboxskipdesc'		=> __( 'Hide this item', 'add-descendants-as-submenu-items' ),
+			'checkboxshallowprefix'	=> $this->form_checkbox_shallow_prefix,
+			'checkboxshallowdesc'	=> __( 'Show only direct descendants (children)', 'add-descendants-as-submenu-items' ),
 		);
 
 		wp_localize_script( $script_slug, 'ADASIParams', $params );
@@ -150,6 +186,8 @@ class Add_Descendants_As_Submenu_Items {
 
 		$response['add'] = 1;
 		$response['checked'] = ( $this->is_enabled_for_menu_item( $id ) ) ? 1 : 0;
+		$response['skip'] = ( $this->is_item_marked_for_skip( $id ) ) ? 1 : 0;
+		$response['shallow'] = ( $this->is_item_shallow( $id ) ) ? 1 : 0;
 
 		exit( json_encode( $response ) );
 	}
@@ -200,6 +238,30 @@ class Add_Descendants_As_Submenu_Items {
 	}
 
 	/**
+	 * Returns a boolean stating whether or not this plugin's option to skip the parent item is enabled.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param int $id The ID of a menu item.
+	 * @return boolean Skip status
+	 */	
+	public function is_item_marked_for_skip( $id ) {
+		return (bool) get_post_meta( $id, $this->meta_key_skip, true );
+	}
+	
+	/**
+	 * Returns a boolean stating whether or not this plugin's option to show only children is enabled.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param int $id The ID of a menu item.
+	 * @return boolean Shallow status
+	 */		
+	public function is_item_shallow( $id ) {
+		return (bool) get_post_meta( $id, $this->meta_key_shallow, true );
+	}
+
+	/**
 	 * Saves the status of the checkboxes that were added to the nav menu configuration panel.
 	 * Called when a nav menu is saved.
 	 *
@@ -219,6 +281,17 @@ class Add_Descendants_As_Submenu_Items {
 				update_post_meta( $id, $this->meta_key, true );
 			else
 				delete_post_meta( $id, $this->meta_key );
+
+			if ( isset( $_POST[$this->form_checkbox_skip_prefix . $id] ) )
+				update_post_meta( $id, $this->meta_key_skip, true );
+			else 
+				delete_post_meta( $id, $this->meta_key_skip );
+
+			if ( isset( $_POST[$this->form_checkbox_shallow_prefix . $id] ) )
+				update_post_meta( $id, $this->meta_key_shallow, true );
+			else 
+				delete_post_meta( $id, $this->meta_key_shallow );
+
 		}
 
 		// This gets called twice for some reason
@@ -227,7 +300,7 @@ class Add_Descendants_As_Submenu_Items {
 
 	/**
 	 * Loop through all nav menu items checking whether the functionality has been enabled or not for them.
-	 * If enabled, add in submenu items for all of their descendants
+	 * If enabled, add in submenu items for their descendants according to selected options.
 	 *
 	 * @since 1.0.0
 	 *
@@ -237,10 +310,21 @@ class Add_Descendants_As_Submenu_Items {
 	public function add_children_to_menu( $items ) {
 		$menu_order = count( $items ) + 1000;
 		$filter_added = false;
+		$new_items = array();
 
 		foreach ( $items as $item ) {
-			if ( ! $this->is_menu_item_supported( $item->db_id, $item->type, $item->object ) || ! $this->is_enabled_for_menu_item( $item->db_id ) )
+			
+			// Creating a new array in order to avoid operating on the array that is looped through. Problematic if is_item_marked_for_skip() == true.
+			$new_items[] = $item;
+
+			if ( ! $this->is_menu_item_supported( $item->db_id, $item->type, $item->object ) || ! $this->is_enabled_for_menu_item( $item->db_id ) ) {
 				continue;
+			} 
+			
+			// Remove item if "Hide this item" is checked
+			if ( $this->is_item_marked_for_skip( $item->ID ) ) {
+				array_pop( $new_items );
+			}
 
 			// Get all descendants
 			switch ( $item->type ) {
@@ -277,13 +361,21 @@ class Add_Descendants_As_Submenu_Items {
 				$child = wp_setup_nav_menu_item( $child );
 				$child->db_id = $child->ID;
 
+				// Skip if not immediate child
+				if ( $this->is_item_shallow( $item->ID ) && $child->$parent_field != $item->object_id ) {
+					continue;
+				}
+
 				$this->added[$child->ID] = true; // We'll need this later
 
 				// Set the parent menu item.
 				// When adding items as children of existing menu items, their IDs won't match up
 				// which means that the parent value can't always be used.
-				if ( $child->$parent_field  == $item->object_id ) {
-					$child->menu_item_parent = $item->ID; // Children
+				if ( $child->$parent_field  == $item->object_id ) {    // Children
+					if ( $this->is_item_marked_for_skip( $item->ID ) )
+						$child->menu_item_parent = $item->parent;
+					else
+						$child->menu_item_parent = $item->ID;
 				} else {
 					$child->menu_item_parent = $child->$parent_field ; // Grandchildren, etc.
 				}
@@ -293,11 +385,11 @@ class Add_Descendants_As_Submenu_Items {
 				$menu_order++;
 				$child->menu_order = $menu_order;
 
-				$items[] = $child;
+				$new_items[] = $child;
 			}
 		}
 
-		return $items;
+		return $new_items;
 	}
 
 	/**
