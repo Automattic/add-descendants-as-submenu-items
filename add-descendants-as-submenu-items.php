@@ -115,7 +115,7 @@ class Add_Descendants_As_Submenu_Items {
 
 		$script_slug = 'adasi-checkboxes';
 
-		wp_enqueue_script( $script_slug, plugins_url( 'checkboxes.js', __FILE__ ), array( 'jquery' ), '1.1.0' );
+		wp_enqueue_script( $script_slug, plugins_url( 'checkboxes.js', __FILE__ ), array( 'jquery' ), '1.2.1' );
 
 		// Pass dynamic values to the Javascript file
 		$params = array(
@@ -296,7 +296,7 @@ class Add_Descendants_As_Submenu_Items {
 				// Set the parent menu item.
 				// When adding items as children of existing menu items, their IDs won't match up
 				// which means that the parent value can't always be used.
-				if ( $child->$parent_field === $item->object_id ) {
+				if ( $child->$parent_field == $item->object_id ) {
 					$child->menu_item_parent = $item->ID; // Children
 				} else {
 					$child->menu_item_parent = $child->$parent_field; // Grandchildren, etc.
@@ -354,12 +354,12 @@ class Add_Descendants_As_Submenu_Items {
 			}
 
 			// Only highlight things of the same type because IDs can collide
-			if ( $item->type !== $type ) {
+			if ( $item->type != $type ) {
 				continue;
 			}
 
 			// See http://core.trac.wordpress.org/ticket/18643
-			if ( $item->object_id === $queried_object_id ) {
+			if ( $item->object_id == $queried_object_id ) {
 				if ( ! in_array( 'current_page_item', $item->classes ) ) {
 					$item->classes[] = 'current_page_item';
 				}
@@ -372,7 +372,7 @@ class Add_Descendants_As_Submenu_Items {
 			$item->classes[]             = 'current_page_ancestor'; // See http://core.trac.wordpress.org/ticket/18643
 
 			// If menu item is direct parent of current page
-			if ( $item->object_id === $queried_object->$parent_field ) {
+			if ( $item->object_id == $queried_object->$parent_field ) {
 				$item->current_item_parent = true;
 				$item->classes[]           = 'current-menu-parent';
 				$item->classes[]           = 'current_page_parent'; // See http://core.trac.wordpress.org/ticket/18643
