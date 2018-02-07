@@ -20,8 +20,8 @@ Visit Plugins &rarr; Add New in your administration area and search for the name
 
 == Screenshots ==
 
-1. The new checkbox that this plugin adds
-2. The child pages have automatically been added as submenu items
+1. The new checkbox that this plugin adds.
+2. The child pages have automatically been added as submenu items.
 
 == ChangeLog ==
 
