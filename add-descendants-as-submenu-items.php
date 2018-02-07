@@ -7,7 +7,7 @@ Plugin URI:   http://www.viper007bond.com/wordpress-plugins/add-descendants-as-s
 Description:  Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
 Version:      1.2.1
 Author:       Alex Mills (Viper007Bond)
-Author URI:   http://www.viper007bond.com/
+Author URI:   https://alex.blog/
 Text Domain:  add-descendants-as-submenu-items
 License:      GPL2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
