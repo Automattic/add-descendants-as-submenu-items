@@ -50,7 +50,7 @@ jQuery(document).ready(function($) {
 
 	// When hovering over a menu item added using Javascript, try adding a checkbox to it.
 	// Props DD32 for mouseover hack to get around return false; inside other click bound event.
-	$('.menu-item.pending').live('mouseover', function(){
+	$('.menu-item.pending').on('mouseover', function(){
 		adasi_add_checkbox( this );
 	});
 });
