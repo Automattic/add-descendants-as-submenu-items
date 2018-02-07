@@ -5,16 +5,16 @@
 Plugin Name:  Add Descendants As Submenu Items
 Plugin URI:   http://www.viper007bond.com/wordpress-plugins/add-descendants-as-submenu-items/
 Description:  Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
-Version:      1.2.0
+Version:      1.2.1
 Author:       Alex Mills (Viper007Bond)
 Author URI:   http://www.viper007bond.com/
-
 Text Domain:  add-descendants-as-submenu-items
-Domain Path:  /localization/
+License:      GPL2
+License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 
 **************************************************************************
 
-Copyright (C) 2011-2012 Alex Mills (Viper007Bond)
+Copyright (C) 2011-2018 Alex Mills (Viper007Bond)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $form_idtracker       = 'adasi-idtracker';
+	public $form_idtracker = 'adasi-idtracker';
 
 	/**
 	 * ID/name prefix for the checkbox inputs.
@@ -69,7 +69,7 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $ajax_action          = 'adasi_checkbox_helper';
+	public $ajax_action = 'adasi_checkbox_helper';
 
 	/**
 	 * Meta key name for storing enabled status.
@@ -77,7 +77,7 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $meta_key             = '_adasi_enabled';
+	public $meta_key = '_adasi_enabled';
 
 	/**
 	 * Stores submenu items that have been added by this plugin.
@@ -95,13 +95,11 @@ class Add_Descendants_As_Submenu_Items {
 	 */
 	function __construct() {
 		if ( is_admin() ) {
-			load_plugin_textdomain( 'add-descendants-as-submenu-items', false, dirname( plugin_basename( __FILE__ ) ) . '/localization/' );
-
-			add_action( 'admin_enqueue_scripts',         array( &$this, 'maybe_enqueue_script' ) );
-			add_action( 'wp_ajax_' . $this->ajax_action, array( &$this, 'ajax_get_menu_status' ) );
-			add_action( 'wp_update_nav_menu',            array( &$this, 'save_nav_menu_custom_fields' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_script' ) );
+			add_action( 'wp_ajax_' . $this->ajax_action, array( $this, 'ajax_get_menu_status' ) );
+			add_action( 'wp_update_nav_menu', array( $this, 'save_nav_menu_custom_fields' ) );
 		} else {
-			add_filter( 'wp_get_nav_menu_items',         array( &$this, 'add_children_to_menu' ) );
+			add_filter( 'wp_get_nav_menu_items', array( $this, 'add_children_to_menu' ) );
 		}
 	}
 
@@ -111,8 +109,9 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 */
 	public function maybe_enqueue_script( $hook_suffix ) {
-		if ( 'nav-menus.php' != $hook_suffix )
+		if ( 'nav-menus.php' !== $hook_suffix ) {
 			return;
+		}
 
 		$script_slug = 'adasi-checkboxes';
 
@@ -140,18 +139,20 @@ class Add_Descendants_As_Submenu_Items {
 			'add' => 0,
 		);
 
-		if ( ! current_user_can( 'edit_theme_options' ) || empty( $_POST['id'] ) )
-			exit( json_encode( $response ) );
+		if ( ! current_user_can( 'edit_theme_options' ) || empty( $_POST['id'] ) ) {
+			exit( wp_json_encode( $response ) );
+		}
 
 		$id = (int) $_POST['id'];
 
-		if ( ! $this->is_menu_item_supported( $id ) )
-			exit( json_encode( $response ) );
+		if ( ! $this->is_menu_item_supported( $id ) ) {
+			exit( wp_json_encode( $response ) );
+		}
 
-		$response['add'] = 1;
+		$response['add']     = 1;
 		$response['checked'] = ( $this->is_enabled_for_menu_item( $id ) ) ? 1 : 0;
 
-		exit( json_encode( $response ) );
+		exit( wp_json_encode( $response ) );
 	}
 
 	/**
@@ -160,26 +161,31 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.1.0
 	 *
 	 * @param int $id The ID of a menu item.
+	 *
 	 * @return boolean Supported status
 	 */
 	public function is_menu_item_supported( $id, $type = false, $object = false ) {
-		if ( ! $type )
+		if ( ! $type ) {
 			$type = get_post_meta( $id, '_menu_item_type', true );
+		}
 
-		if ( ! $object )
+		if ( ! $object ) {
 			$object = get_post_meta( $id, '_menu_item_object', true );
+		}
 
 		switch ( $type ) {
 
 			case 'post_type':
-				if ( is_post_type_hierarchical( $object ) )
+				if ( is_post_type_hierarchical( $object ) ) {
 					return true;
+				}
 
 				break;
 
 			case 'taxonomy':
-				if ( is_taxonomy_hierarchical( $object ) )
+				if ( is_taxonomy_hierarchical( $object ) ) {
 					return true;
+				}
 
 				break;
 		}
@@ -193,6 +199,7 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.1.0
 	 *
 	 * @param int $id The ID of a menu item.
+	 *
 	 * @return boolean Enabled status
 	 */
 	public function is_enabled_for_menu_item( $id ) {
@@ -206,19 +213,22 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 */
 	public function save_nav_menu_custom_fields() {
-		if ( empty( $_POST[$this->form_idtracker] ) )
+		if ( empty( $_POST[ $this->form_idtracker ] ) ) {
 			return;
+		}
 
-		$ids = array_map( 'intval', explode( ',', ltrim( $_POST[$this->form_idtracker], ',' ) ) );
+		$ids = array_map( 'intval', explode( ',', ltrim( $_POST[ $this->form_idtracker ], ',' ) ) );
 
 		foreach ( $ids as $id ) {
-			if ( ! $id )
+			if ( ! $id ) {
 				continue;
+			}
 
-			if ( isset( $_POST[$this->form_checkbox_prefix . $id] ) )
+			if ( isset( $_POST[ $this->form_checkbox_prefix . $id ] ) ) {
 				update_post_meta( $id, $this->meta_key, true );
-			else
+			} else {
 				delete_post_meta( $id, $this->meta_key );
+			}
 		}
 
 		// This gets called twice for some reason
@@ -232,15 +242,17 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 *
 	 * @param array $items Array of nav menu items.
+	 *
 	 * @return array Potentially modified array of nav menu items.
 	 */
 	public function add_children_to_menu( $items ) {
-		$menu_order = count( $items ) + 1000;
+		$menu_order   = count( $items ) + 1000;
 		$filter_added = false;
 
 		foreach ( $items as $item ) {
-			if ( ! $this->is_menu_item_supported( $item->db_id, $item->type, $item->object ) || ! $this->is_enabled_for_menu_item( $item->db_id ) )
+			if ( ! $this->is_menu_item_supported( $item->db_id, $item->type, $item->object ) || ! $this->is_enabled_for_menu_item( $item->db_id ) ) {
 				continue;
+			}
 
 			// Get all descendants
 			switch ( $item->type ) {
@@ -258,39 +270,41 @@ class Add_Descendants_As_Submenu_Items {
 
 				case 'taxonomy' :
 					$children = get_terms( $item->object, array(
-						'child_of'    => $item->object_id,
+						'child_of' => $item->object_id,
 					) );
 
 					$parent_field = 'parent';
 					break;
 			}
 
-			if ( empty( $children ) || is_wp_error( $children ) )
+			if ( empty( $children ) || is_wp_error( $children ) ) {
 				continue;
+			}
 
 			// Menu items are being added, so later fix the "current" values for highlighting
-			if ( ! $filter_added )
-				add_filter( 'wp_nav_menu_objects',  array( &$this, 'fix_menu_current_item' ) );
+			if ( ! $filter_added ) {
+				add_filter( 'wp_nav_menu_objects', array( &$this, 'fix_menu_current_item' ) );
+			}
 
 			// Add each child to the menu
 			foreach ( $children as $child ) {
-				$child = wp_setup_nav_menu_item( $child );
+				$child        = wp_setup_nav_menu_item( $child );
 				$child->db_id = $child->ID;
 
-				$this->added[$child->ID] = true; // We'll need this later
+				$this->added[ $child->ID ] = true; // We'll need this later
 
 				// Set the parent menu item.
 				// When adding items as children of existing menu items, their IDs won't match up
 				// which means that the parent value can't always be used.
-				if ( $child->$parent_field  == $item->object_id ) {
+				if ( $child->$parent_field === $item->object_id ) {
 					$child->menu_item_parent = $item->ID; // Children
 				} else {
-					$child->menu_item_parent = $child->$parent_field ; // Grandchildren, etc.
+					$child->menu_item_parent = $child->$parent_field; // Grandchildren, etc.
 				}
 
 				// The menu_order has to be unique, so make up new ones
 				// The items are already sorted due to the get_pages()
-				$menu_order++;
+				$menu_order ++;
 				$child->menu_order = $menu_order;
 
 				$items[] = $child;
@@ -307,25 +321,27 @@ class Add_Descendants_As_Submenu_Items {
 	 * @since 1.0.0
 	 *
 	 * @param array $items Array of nav menu items.
+	 *
 	 * @return array Potentially modified array of nav menu items.
 	 */
 	public function fix_menu_current_item( $items ) {
-		$queried_object = get_queried_object();
+		$queried_object    = get_queried_object();
 		$queried_object_id = (int) get_queried_object_id();
 
 		// Only need to fix items added by this plugin
-		if ( empty( $queried_object_id ) || empty( $this->added[$queried_object_id] ) )
+		if ( empty( $queried_object_id ) || empty( $this->added[ $queried_object_id ] ) ) {
 			return $items;
+		}
 
 		// Get ancestors of currently displayed item
 		if ( isset( $queried_object->term_id ) ) {
-			$ancestors = get_ancestors( $queried_object->term_id, $queried_object->taxonomy );
+			$ancestors    = get_ancestors( $queried_object->term_id, $queried_object->taxonomy );
 			$parent_field = 'parent';
-			$type = 'taxonomy';
+			$type         = 'taxonomy';
 		} elseif ( is_singular() ) {
-			$ancestors = get_post_ancestors( $queried_object_id );
+			$ancestors    = get_post_ancestors( $queried_object_id );
 			$parent_field = 'post_parent';
-			$type = 'post_type';
+			$type         = 'post_type';
 		} else {
 			return $items;
 		}
@@ -333,15 +349,17 @@ class Add_Descendants_As_Submenu_Items {
 		$ancestors[] = $queried_object_id; // Needed to potentially add "current_page_item"
 
 		foreach ( $items as $item ) {
-			if ( ! in_array( $item->object_id, $ancestors ) )
+			if ( ! in_array( $item->object_id, $ancestors ) ) {
 				continue;
+			}
 
 			// Only highlight things of the same type because IDs can collide
-			if ( $item->type !== $type )
+			if ( $item->type !== $type ) {
 				continue;
+			}
 
 			// See http://core.trac.wordpress.org/ticket/18643
-			if ( $item->object_id == $queried_object_id ) {
+			if ( $item->object_id === $queried_object_id ) {
 				if ( ! in_array( 'current_page_item', $item->classes ) ) {
 					$item->classes[] = 'current_page_item';
 				}
@@ -350,14 +368,14 @@ class Add_Descendants_As_Submenu_Items {
 			}
 
 			$item->current_item_ancestor = true;
-			$item->classes[] = 'current-menu-ancestor';
-			$item->classes[] = 'current_page_ancestor'; // See http://core.trac.wordpress.org/ticket/18643
+			$item->classes[]             = 'current-menu-ancestor';
+			$item->classes[]             = 'current_page_ancestor'; // See http://core.trac.wordpress.org/ticket/18643
 
 			// If menu item is direct parent of current page
-			if ( $item->object_id == $queried_object->$parent_field ) {
+			if ( $item->object_id === $queried_object->$parent_field ) {
 				$item->current_item_parent = true;
-				$item->classes[] = 'current-menu-parent';
-				$item->classes[] = 'current_page_parent'; // See http://core.trac.wordpress.org/ticket/18643
+				$item->classes[]           = 'current-menu-parent';
+				$item->classes[]           = 'current_page_parent'; // See http://core.trac.wordpress.org/ticket/18643
 			}
 		}
 
@@ -367,5 +385,3 @@ class Add_Descendants_As_Submenu_Items {
 
 // Initialize the plugin
 $add_descendants_as_submenu_items = new Add_Descendants_As_Submenu_Items();
-
-?>
