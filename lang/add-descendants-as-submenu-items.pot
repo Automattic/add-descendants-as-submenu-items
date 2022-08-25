@@ -1,0 +1,40 @@
+# Copyright (C) 2022 Alex Mills (Viper007Bond)
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: Add Descendants As Submenu Items 1.2.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/add-descendants-as-submenu-items\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-08-25T15:54:49+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: add-descendants-as-submenu-items\n"
+
+#. Plugin Name of the plugin
+msgid "Add Descendants As Submenu Items"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://alex.blog/wordpress-plugins/add-descendants-as-submenu-items/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Automatically add all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy."
+msgstr ""
+
+#. Author of the plugin
+msgid "Alex Mills (Viper007Bond)"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://alex.blog/"
+msgstr ""
+
+#: add-descendants-as-submenu-items.php:128
+#: add-descendants-as-submenu-items/add-descendants-as-submenu-items.php:128
+msgid "Automatically add all descendants as submenu items"
+msgstr ""

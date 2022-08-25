@@ -1,0 +1,23 @@
+{
+  "name": "add-descendants-as-submenu-items",
+  "version": "1.2.2",
+  "description": "Automatically add all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.",
+  "scripts": {
+    "build": "npm run archive",
+    "archive": "composer archive --file=$npm_package_name --format=zip",
+    "i18n:build": "wp i18n make-pot --headers='{\"Last-Translator\":null,\"Language-Team\":null,\"Report-Msgid-Bugs-To\":\"https://wordpress.org/support/plugin/add-descendants-as-submenu-items\"}' . lang/add-descendants-as-submenu-items.pot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Automattic/add-descendants-as-submenu-items.git"
+  },
+  "author": "Alex Mills",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/Automattic/add-descendants-as-submenu-items/issues"
+  },
+  "homepage": "https://github.com/Automattic/add-descendants-as-submenu-items#readme",
+  "config": {
+    "wp_org_slug": "add-descendants-as-submenu-items"
+  }
+}
