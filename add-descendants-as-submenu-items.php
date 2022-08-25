@@ -291,6 +291,10 @@ class Add_Descendants_As_Submenu_Items {
 				$child        = wp_setup_nav_menu_item( $child );
 				$child->db_id = $child->ID;
 
+				if ( empty( $child->status ) ) {
+					$child->status = 'publish';
+				}
+
 				$this->added[ $child->ID ] = true; // We'll need this later
 
 				// Set the parent menu item.
