@@ -1,0 +1,20 @@
+= 1.2.2 =
+* Fix fatal error in customizer when using taxonomies in menus.
+* Add POT file for translations.
+
+= 1.2.1 =
+* Minor update allowing for loading translation files from WordPress.org.
+
+= 1.2.0 =
+* `_get_post_ancestors()` will/was deprecated in WordPress 3.5 and no longer works. Parts of this plugin have been rewritten to more properly get post ancestors.
+* Bug fix: Don't highlight parents of different types. Post types and terms can have the same IDs.
+
+= 1.1.0 =
+* Support for hierarchical taxonomies (i.e. categories). Props WPAddiction for the idea.
+* Translatable plugin headers.
+
+= 1.0.1 =
+* Fix sorting by secondarily sorting by title.
+
+= 1.0.0 =
+* Initial release!

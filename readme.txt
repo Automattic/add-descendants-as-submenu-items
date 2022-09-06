@@ -1,8 +1,8 @@
 === Add Descendants As Submenu Items ===
 Contributors: Viper007Bond
 Tags: menu, nav menu, children, descendants
-Tested up to: 4.9
-Stable tag: trunk
+Tested up to: 6.0
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,10 @@ Visit Plugins &rarr; Add New in your administration area and search for the name
 2. The child pages have automatically been added as submenu items.
 
 == ChangeLog ==
+
+= Version 1.2.2 =
+* Fix fatal error in customizer when using taxonomies in menus.
+* Add POT file for translations.
 
 = Version 1.2.1 =
 * Minor update allowing for loading translation files from WordPress.org.

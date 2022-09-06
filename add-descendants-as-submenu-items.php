@@ -4,11 +4,12 @@
 
 Plugin Name:  Add Descendants As Submenu Items
 Plugin URI:   https://alex.blog/wordpress-plugins/add-descendants-as-submenu-items/
-Description:  Automatically all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
-Version:      1.2.1
+Description:  Automatically add all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.
+Version:      1.2.2
 Author:       Alex Mills (Viper007Bond)
 Author URI:   https://alex.blog/
 Text Domain:  add-descendants-as-submenu-items
+Domain path: /lang/
 License:      GPL2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 

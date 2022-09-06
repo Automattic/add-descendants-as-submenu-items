@@ -1,0 +1,25 @@
+{
+	"name": "automattic/add-descendants-as-submenu-items",
+	"description": "Automatically add all of a nav menu item's descendants as submenu items. Designed for pages but will work with any hierarchical post type or taxonomy.",
+	"type": "project",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Alex Mills",
+			"email": "no-email@example.com"
+		}
+	],
+	"require": {},
+	"archive": {
+		"exclude": [
+			"/*",
+			"/.*",
+			"!/*.js",
+			"!/lang",
+			"!/*.php",
+			"!/LICENSE",
+			"!/readme.txt",
+			"!/changelog.txt"
+		]
+	}
+}
